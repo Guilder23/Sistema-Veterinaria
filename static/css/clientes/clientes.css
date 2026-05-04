@@ -1,9 +1,12 @@
 /* Specific styles for Clientes */
 .badge-count {
-    background: #f3f4f6;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    background: #eef2ff;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
     font-weight: 700;
     color: var(--primary-color);
 }
+
+.btn-action.edit { background: #eef2ff; color: var(--primary-color); }
+.btn-action.delete { background: #fee2e2; color: var(--danger-color); }

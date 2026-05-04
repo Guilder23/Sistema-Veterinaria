@@ -1,16 +1,18 @@
 /* Specific styles for Mascotas */
 .pet-thumb {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
     object-fit: cover;
-    border: 2px solid #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border: 1px solid #e3e6f0;
 }
 
 .pet-name-td {
     font-weight: 700;
-    color: var(--dark-color);
+    color: var(--primary-color);
 }
 
+.btn-action.view { background: #f3e8ff; color: #7c3aed; }
 .btn-action.vaccine { background: #dcfce7; color: #16a34a; }
+.btn-action.edit { background: #eef2ff; color: var(--primary-color); }
+.btn-action.delete { background: #fee2e2; color: var(--danger-color); }

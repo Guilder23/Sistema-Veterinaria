@@ -45,8 +45,8 @@ def dashboard(request):
     ingresos_mes = Factura.objects.filter(fecha__gte=start_of_month, pagado=True).aggregate(Sum('total'))['total__sum'] or 0
     
     # Recent activity
-    proximas_citas = Cita.objects.filter(fecha__gte=today).order_by('fecha', 'hora')[:5]
-    ultimas_mascotas = Mascota.objects.all().order_by('-fecha_registro')[:5]
+    proximas_citas = Cita.objects.filter(fecha__gte=today).order_by('fecha', 'hora')[:3]
+    ultimas_mascotas = Mascota.objects.all().order_by('-fecha_registro')[:3]
     
     # Chart data: Revenue last 6 months
     six_months_ago = today - timezone.timedelta(days=180)
