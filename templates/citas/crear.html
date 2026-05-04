@@ -10,56 +10,102 @@
 {% endblock %}
 
 {% block content %}
-<div class="card form-card">
-    <form method="POST">
-        {% csrf_token %}
-        
-        <div class="form-group">
-            <label for="mascota">Mascota</label>
-            <select name="mascota" id="mascota" class="form-control" required>
-                <option value="">Seleccione una mascota</option>
-                {% for mascota in mascotas %}
-                <option value="{{ mascota.id }}">{{ mascota.nombre }} ({{ mascota.cliente.nombre_completo }})</option>
-                {% endfor %}
-            </select>
-        </div>
+<form method="POST" id="booking-form">
+    {% csrf_token %}
+    <input type="hidden" name="hora" id="selected-hour" required>
+    
+    <div class="booking-container">
+        <!-- Main Form -->
+        <div class="booking-main">
+            <div class="card">
+                <div class="booking-header">
+                    <h3>1. Información Básica</h3>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="mascota">Mascota</label>
+                        <select name="mascota" id="mascota" class="form-control" required>
+                            <option value="">Seleccione una mascota</option>
+                            {% for mascota in mascotas %}
+                            <option value="{{ mascota.id }}">{{ mascota.nombre }} ({{ mascota.cliente.nombre_completo }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="veterinario">Veterinario (Opcional)</label>
+                        <select name="veterinario" id="veterinario" class="form-control">
+                            <option value="">Cualquier veterinario</option>
+                            {% for vet in veterinarios %}
+                            <option value="{{ vet.id }}">{{ vet.get_full_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label for="veterinario">Veterinario (Opcional)</label>
-            <select name="veterinario" id="veterinario" class="form-control">
-                <option value="">Cualquier veterinario</option>
-                {% for vet in veterinarios %}
-                <option value="{{ vet.id }}">{{ vet.get_full_name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="grid-2">
-            <div class="form-group">
-                <label for="fecha">Fecha</label>
-                <input type="date" name="fecha" id="fecha" class="form-control" required>
+                <div class="form-group">
+                    <label for="motivo">Motivo de la Cita</label>
+                    <input type="text" name="motivo" id="motivo" class="form-control" placeholder="Ej: Vacunación, Consulta general" required>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="hora">Hora</label>
-                <input type="time" name="hora" id="hora" class="form-control" required>
+
+            <div class="card">
+                <div class="booking-header">
+                    <h3>2. Fecha y Hora</h3>
+                    <p class="helper-text">Selecciona un día para ver las horas disponibles.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha">Seleccionar Fecha</label>
+                    <input type="date" name="fecha" id="fecha" class="form-control" min="{{ today|date:'Y-m-d' }}" required>
+                </div>
+
+                <div id="time-slots-container" style="display: none;">
+                    <label>Horas Disponibles</label>
+                    <div class="time-slots-grid" id="time-slots">
+                        <!-- Slots will be loaded here via JS -->
+                    </div>
+                </div>
+                
+                <div id="no-date-selected" class="empty-state">
+                    <i class="far fa-calendar-alt fa-3x mb-1" style="color: #d1d3e2;"></i>
+                    <p>Por favor, selecciona una fecha primero.</p>
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="motivo">Motivo de la Cita</label>
-            <input type="text" name="motivo" id="motivo" class="form-control" placeholder="Ej: Vacunación, Consulta general" required>
+        <!-- Summary Sidebar -->
+        <div class="booking-sidebar">
+            <div class="card summary-card">
+                <div class="booking-header">
+                    <h4>Resumen</h4>
+                </div>
+                
+                <div class="summary-item">
+                    <span class="label">Mascota:</span>
+                    <span class="value" id="summary-pet">-</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Fecha:</span>
+                    <span class="value" id="summary-date">-</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Hora:</span>
+                    <span class="value" id="summary-hour">-</span>
+                </div>
+                
+                <div class="form-actions flex-column mt-1">
+                    <button type="submit" class="btn btn-primary btn-full" id="btn-submit" disabled>
+                        <i class="fas fa-calendar-check"></i> Confirmar Cita
+                    </button>
+                    <a href="{% url 'listar_citas' %}" class="btn btn-secondary btn-full">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                </div>
+            </div>
         </div>
-        
-        <div class="form-actions">
-            <a href="{% url 'listar_citas' %}" class="btn btn-secondary">
-                <i class="fas fa-times"></i> Cancelar
-            </a>
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-calendar-check"></i> Programar Cita
-            </button>
-        </div>
-    </form>
-</div>
+    </div>
+</form>
 {% endblock %}
 
 {% block extra_js %}

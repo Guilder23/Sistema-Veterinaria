@@ -1,0 +1,122 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Calendario de Citas - VetCare{% endblock %}
+
+{% block page_title %}Calendario de Citas{% endblock %}
+
+{% block extra_css %}
+<!-- FullCalendar CSS -->
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+<style>
+    .calendar-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+    }
+    .fc-event {
+        cursor: pointer;
+        padding: 2px 5px;
+        border-radius: 4px;
+        border: none;
+    }
+    .fc-toolbar-title {
+        font-weight: 800 !important;
+        color: var(--primary-color);
+        text-transform: capitalize;
+    }
+    .fc-button-primary {
+        background-color: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+    }
+    .calendar-legend {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: #f8f9fc;
+        border-radius: 10px;
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="calendar-container">
+    <div class="card-header">
+        <h4>Agenda Visual</h4>
+        <div class="header-actions">
+            <a href="{% url 'listar_citas' %}" class="btn btn-secondary">
+                <i class="fas fa-list"></i> Ver Lista
+            </a>
+            <a href="{% url 'crear_cita' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nueva Cita
+            </a>
+        </div>
+    </div>
+
+    <div id='calendar'></div>
+
+    <div class="calendar-legend">
+        <div class="legend-item">
+            <span class="dot" style="background: #f6c23e;"></span> Pendiente
+        </div>
+        <div class="legend-item">
+            <span class="dot" style="background: #4e73df;"></span> Confirmada
+        </div>
+        <div class="legend-item">
+            <span class="dot" style="background: #1cc88a;"></span> Atendida
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- FullCalendar JS -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/es.js'></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            locale: 'es',
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: '{% url "eventos_citas" %}',
+            eventTimeFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                meridiem: false,
+                hour12: false
+            },
+            slotMinTime: '08:00:00',
+            slotMaxTime: '19:00:00',
+            allDaySlot: false,
+            eventClick: function(info) {
+                if (info.event.url) {
+                    window.location.href = info.event.url;
+                    return false;
+                }
+            }
+        });
+        calendar.render();
+    });
+</script>
+{% endblock %}

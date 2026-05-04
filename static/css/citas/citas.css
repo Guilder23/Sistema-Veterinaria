@@ -29,3 +29,101 @@
 .btn-action.confirm { background: #e3f2fd; color: #1976d2; }
 .btn-action.complete { background: #e8f5e9; color: #2e7d32; }
 .btn-action.cancel { background: #ffebee; color: #c62828; }
+
+/* New Appointment UI */
+.booking-container {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
+}
+
+@media (max-width: 992px) {
+    .booking-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.time-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.time-slot {
+    padding: 0.8rem;
+    border: 1px solid #e3e6f0;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 600;
+    font-size: 0.9rem;
+    background: #fff;
+}
+
+.time-slot:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background: #f8faff;
+}
+
+.time-slot.selected {
+    background: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+}
+
+.time-slot.occupied {
+    background: #f3f4f6;
+    color: #d1d3e2;
+    cursor: not-allowed;
+    border-color: #f0f0f0;
+}
+
+.time-slot.occupied:hover {
+    transform: none;
+}
+
+.summary-card {
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-item .label {
+    color: var(--secondary-color);
+    font-size: 0.85rem;
+}
+
+.summary-item .value {
+    font-weight: 600;
+}
+
+.booking-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.booking-header h3 {
+    color: var(--primary-color);
+    font-weight: 800;
+}
+
+.helper-text {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+    margin-top: 0.5rem;
+}
