@@ -18,7 +18,7 @@
         <div class="stat-details">
             <p class="stat-label">Citas de hoy</p>
             <h3 class="stat-value">{{ citas_hoy }}</h3>
-            <a href="#" class="stat-link">Ver agenda <i class="fas fa-arrow-right"></i></a>
+            <a href="{% url 'listar_citas' %}" class="stat-link">Ver agenda <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
 
@@ -29,7 +29,7 @@
         <div class="stat-details">
             <p class="stat-label">Mascotas registradas</p>
             <h3 class="stat-value">{{ total_mascotas }}</h3>
-            <a href="#" class="stat-link">Ver todas <i class="fas fa-arrow-right"></i></a>
+            <a href="{% url 'listar_mascotas' %}" class="stat-link">Ver todas <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
 
@@ -40,7 +40,7 @@
         <div class="stat-details">
             <p class="stat-label">Clientes registrados</p>
             <h3 class="stat-value">{{ total_clientes }}</h3>
-            <a href="#" class="stat-link">Ver todos <i class="fas fa-arrow-right"></i></a>
+            <a href="{% url 'listar_clientes' %}" class="stat-link">Ver todos <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
 
@@ -51,16 +51,17 @@
         <div class="stat-details">
             <p class="stat-label">Ingresos del mes</p>
             <h3 class="stat-value">${{ ingresos_mes }}</h3>
-            <a href="#" class="stat-link">Ver reporte <i class="fas fa-arrow-right"></i></a>
+            <a href="{% url 'reportes_general' %}" class="stat-link">Ver reporte <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
 </div>
 
 <div class="dashboard-grid">
+    <!-- Appointments -->
     <div class="grid-item card">
         <div class="card-header">
             <h4>Citas de hoy</h4>
-            <a href="#" class="link-small">Ver todas</a>
+            <a href="{% url 'listar_citas' %}" class="link-small">Ver todas</a>
         </div>
         <div class="appointments-list">
             {% for cita in proximas_citas %}
@@ -81,43 +82,38 @@
             <p class="empty-state">No hay citas para hoy.</p>
             {% endfor %}
         </div>
-        <button class="btn btn-primary btn-full mt-1">Nueva cita</button>
+        <a href="{% url 'crear_cita' %}" class="btn btn-primary btn-full mt-1">Nueva cita</a>
     </div>
 
+    <!-- Revenue Chart -->
     <div class="grid-item card">
         <div class="card-header">
-            <h4>Ingresos (Este mes)</h4>
-            <select class="select-small">
-                <option>Mensual</option>
-            </select>
+            <h4>Ingresos (6 meses)</h4>
         </div>
         <div class="chart-container">
-            <!-- Chart placeholder -->
             <canvas id="revenueChart"></canvas>
         </div>
     </div>
 
+    <!-- Recent Pets -->
     <div class="grid-item card">
         <div class="card-header">
-            <h4>Stock bajo</h4>
-            <a href="#" class="link-small">Ver todos</a>
+            <h4>Últimas Mascotas</h4>
+            <a href="{% url 'listar_mascotas' %}" class="link-small">Ver todas</a>
         </div>
         <div class="stock-list">
-            <!-- Example items as seen in image -->
+            {% for mascota in ultimas_mascotas %}
             <div class="stock-item">
-                <img src="{% static 'img/products/antapulgas.png' %}" alt="Product">
+                <img src="{% if mascota.foto %}{{ mascota.foto.url }}{% else %}{% static 'img/default-pet.png' %}{% endif %}" alt="Pet">
                 <div class="product-info">
-                    <p class="product-name">Antipulgas</p>
+                    <p class="product-name">{{ mascota.nombre }}</p>
+                    <p class="owner-name" style="font-size: 0.75rem; color: var(--secondary-color);">{{ mascota.cliente.nombre_completo }}</p>
                 </div>
-                <div class="stock-badge low">5 unidades</div>
+                <div class="stock-badge">{{ mascota.especie }}</div>
             </div>
-            <div class="stock-item">
-                <img src="{% static 'img/products/vacuna.png' %}" alt="Product">
-                <div class="product-info">
-                    <p class="product-name">Vacuna Rabia</p>
-                </div>
-                <div class="stock-badge low">3 unidades</div>
-            </div>
+            {% empty %}
+            <p class="empty-state">No hay mascotas registradas.</p>
+            {% endfor %}
         </div>
     </div>
 </div>
@@ -125,5 +121,46 @@
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="{% static 'js/core/dashboard.js' %}"></script>
+<script>
+    // Revenue Chart
+    const revCtx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(revCtx, {
+        type: 'line',
+        data: {
+            labels: {{ chart_labels|safe }},
+            datasets: [{
+                label: 'Ingresos ($)',
+                data: {{ chart_values|safe }},
+                borderColor: '#4e73df',
+                backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '$' + context.parsed.y;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
 {% endblock %}

@@ -5,6 +5,28 @@
 
 {% block page_title %}Reportes Generales{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/core/dashboard.css' %}">
+<style>
+    .report-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+    .full-width {
+        grid-column: span 2;
+    }
+    @media (max-width: 992px) {
+        .report-grid {
+            grid-template-columns: 1fr;
+        }
+        .full-width {
+            grid-column: span 1;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="dashboard-stats">
     <div class="stat-card">
@@ -12,17 +34,58 @@
             <i class="fas fa-dollar-sign"></i>
         </div>
         <div class="stat-details">
-            <p class="stat-label">Ingresos del Mes</p>
+            <p class="stat-label">Ingresos (Mes)</p>
             <h3 class="stat-value">${{ total_revenue }}</h3>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon blue">
+            <i class="fas fa-receipt"></i>
+        </div>
+        <div class="stat-details">
+            <p class="stat-label">Ticket Promedio</p>
+            <h3 class="stat-value">${{ avg_ticket }}</h3>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon green">
+            <i class="fas fa-paw"></i>
+        </div>
+        <div class="stat-details">
+            <p class="stat-label">Total Mascotas</p>
+            <h3 class="stat-value">{{ total_pets }}</h3>
         </div>
     </div>
 </div>
 
-<div class="dashboard-grid">
+<div class="report-grid">
+    <!-- Daily Revenue -->
+    <div class="grid-item card full-width">
+        <div class="card-header">
+            <h4>Ingresos Diarios (Últimos 30 días)</h4>
+        </div>
+        <div class="chart-container" style="height: 350px;">
+            <canvas id="dailyRevenueChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Species Distribution -->
     <div class="grid-item card">
-        <h4>Distribución por Especie</h4>
+        <div class="card-header">
+            <h4>Distribución por Especie</h4>
+        </div>
         <div class="chart-container" style="height: 300px;">
             <canvas id="speciesChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Top Products -->
+    <div class="grid-item card">
+        <div class="card-header">
+            <h4>Productos Más Vendidos</h4>
+        </div>
+        <div class="chart-container" style="height: 300px;">
+            <canvas id="productsChart"></canvas>
         </div>
     </div>
 </div>
@@ -30,26 +93,65 @@
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="{% static 'js/reportes/reportes.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('speciesChart');
-        if (ctx) {
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Perros', 'Gatos', 'Otros'],
-                    datasets: [{
-                        data: [{{ perros }}, {{ gatos }}, {{ otros }}],
-                        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
+        // Daily Revenue Chart
+        const dailyCtx = document.getElementById('dailyRevenueChart').getContext('2d');
+        new Chart(dailyCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ daily_labels|safe }},
+                datasets: [{
+                    label: 'Ingresos Diarios',
+                    data: {{ daily_values|safe }},
+                    backgroundColor: '#4e73df',
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, ticks: { callback: v => '$' + v } }
                 }
-            });
-        }
+            }
+        });
+
+        // Species Chart
+        const specCtx = document.getElementById('speciesChart').getContext('2d');
+        new Chart(specCtx, {
+            type: 'doughnut',
+            data: {
+                labels: {{ especies_labels|safe }},
+                datasets: [{
+                    data: {{ especies_values|safe }},
+                    backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+
+        // Top Products Chart
+        const prodCtx = document.getElementById('productsChart').getContext('2d');
+        new Chart(prodCtx, {
+            type: 'pie',
+            data: {
+                labels: {{ prod_labels|safe }},
+                datasets: [{
+                    data: {{ prod_values|safe }},
+                    backgroundColor: ['#f6c23e', '#e74a3b', '#4e73df', '#1cc88a', '#36b9cc']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
     });
 </script>
 {% endblock %}
