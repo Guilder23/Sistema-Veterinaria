@@ -41,9 +41,17 @@
         </div>
         
         <div class="form-actions">
-            <a href="{% url 'ver_vacunas' mascota.pk %}" class="btn btn-secondary">Cancelar</a>
-            <button type="submit" class="btn btn-primary">Guardar Registro</button>
+            <a href="{% url 'ver_vacunas' mascota.pk %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancelar
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Guardar Registro
+            </button>
         </div>
     </form>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/vacunas/vacunas.js' %}"></script>
 {% endblock %}

@@ -38,6 +38,7 @@
             </div>
             
             <a href="{% url 'nueva_consulta' historial.pk %}" class="btn btn-primary btn-full mt-1">Nueva Consulta</a>
+            <a href="{% url 'nuevo_procedimiento' historial.pk %}" class="btn btn-secondary btn-full mt-1">Nuevo Procedimiento</a>
         </div>
     </div>
 
@@ -48,6 +49,20 @@
         </div>
         
         <div class="timeline">
+            {% for procedimiento in procedimientos %}
+            <div class="timeline-item procedure">
+                <div class="timeline-icon"><i class="fas fa-procedures"></i></div>
+                <div class="timeline-content card">
+                    <div class="timeline-date">{{ procedimiento.fecha|date:"d M Y" }}</div>
+                    <h5>Procedimiento: {{ procedimiento.get_tipo_display }}</h5>
+                    <p>{{ procedimiento.descripcion }}</p>
+                    {% if procedimiento.observaciones %}
+                    <p class="obs"><strong>Obs:</strong> {{ procedimiento.observaciones }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+
             {% for consulta in consultas %}
             <div class="timeline-item">
                 <div class="timeline-icon"><i class="fas fa-stethoscope"></i></div>

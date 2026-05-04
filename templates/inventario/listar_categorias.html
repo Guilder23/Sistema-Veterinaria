@@ -1,0 +1,58 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Categorías - VetCare{% endblock %}
+
+{% block page_title %}Categorías de Productos{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inventario/inventario.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4>Lista de Categorías</h4>
+        <div class="header-actions">
+            <a href="{% url 'listar_productos' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver a Inventario
+            </a>
+            <a href="{% url 'crear_categoria' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nueva Categoría
+            </a>
+        </div>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for categoria in categorias %}
+                <tr>
+                    <td><strong>{{ categoria.nombre }}</strong></td>
+                    <td>{{ categoria.descripcion|default:"-" }}</td>
+                    <td class="actions">
+                        <a href="{% url 'editar_categoria' categoria.pk %}" class="btn-action edit" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'eliminar_categoria' categoria.pk %}" class="btn-action delete" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="empty-state">No hay categorías registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

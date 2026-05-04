@@ -54,5 +54,53 @@
             </table>
         </div>
     </div>
+
+    <div class="card mt-2">
+        <div class="card-header">
+            <h4>Registro de Desparasitaciones</h4>
+            <a href="{% url 'registrar_desparasitacion' mascota.pk %}" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> Registrar Desparasitación
+            </a>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Producto</th>
+                        <th>Fecha Aplicación</th>
+                        <th>Próxima Fecha</th>
+                        <th>Peso (kg)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for des in desparasitaciones %}
+                    <tr>
+                        <td><strong>{{ des.get_tipo_display }}</strong></td>
+                        <td>{{ des.producto }}</td>
+                        <td>{{ des.fecha_aplicacion|date:"d/m/Y" }}</td>
+                        <td>
+                            {% if des.proxima_fecha %}
+                            <span class="next-dose">{{ des.proxima_fecha|date:"d/m/Y" }}</span>
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>{{ des.peso_actual }} kg</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="empty-state">No hay desparasitaciones registradas.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/vacunas/vacunas.js' %}"></script>
 {% endblock %}

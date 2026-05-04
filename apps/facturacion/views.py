@@ -36,8 +36,13 @@ def crear_factura(request):
                 
                 total_factura = 0
                 for i in range(len(producto_ids)):
+                    if not producto_ids[i]: continue # Skip empty rows
                     prod = Producto.objects.get(id=producto_ids[i])
                     cant = int(cantidades[i])
+                    
+                    if prod.stock < cant:
+                        raise Exception(f"Stock insuficiente para {prod.nombre}")
+                        
                     subtotal = prod.precio_venta * cant
                     
                     DetalleFactura.objects.create(
@@ -66,3 +71,8 @@ def crear_factura(request):
         'clientes': clientes,
         'productos': productos
     })
+
+@login_required
+def ver_factura(request, pk):
+    factura = get_object_or_404(Factura, pk=pk)
+    return render(request, 'facturacion/ver.html', {'factura': factura})

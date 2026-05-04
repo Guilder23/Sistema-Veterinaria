@@ -49,3 +49,27 @@ def nueva_consulta(request, historial_pk):
             messages.error(request, f'Error al registrar consulta: {e}')
             
     return render(request, 'historiales/nueva_consulta.html', {'historial': historial})
+
+@login_required
+def nuevo_procedimiento(request, historial_pk):
+    historial = get_object_or_404(HistorialClinico, pk=historial_pk)
+    if request.method == 'POST':
+        tipo = request.POST.get('tipo')
+        descripcion = request.POST.get('descripcion')
+        fecha = request.POST.get('fecha')
+        observaciones = request.POST.get('observaciones')
+        
+        try:
+            Procedimiento.objects.create(
+                historial=historial,
+                tipo=tipo,
+                descripcion=descripcion,
+                fecha=fecha,
+                observaciones=observaciones
+            )
+            messages.success(request, 'Procedimiento registrado correctamente.')
+            return redirect('ver_historial', mascota_pk=historial.mascota.pk)
+        except Exception as e:
+            messages.error(request, f'Error al registrar procedimiento: {e}')
+            
+    return render(request, 'historiales/nuevo_procedimiento.html', {'historial': historial})

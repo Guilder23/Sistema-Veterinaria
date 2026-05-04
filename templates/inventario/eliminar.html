@@ -1,0 +1,23 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Eliminar Producto - {{ producto.nombre }}{% endblock %}
+
+{% block page_title %}Eliminar Producto{% endblock %}
+
+{% block content %}
+<div class="card form-card text-center">
+    <div class="alert alert-danger">
+        <p><i class="fas fa-exclamation-triangle"></i> <strong>Atención:</strong> ¿Estás seguro de que deseas eliminar el producto <strong>{{ producto.nombre }}</strong>?</p>
+        <p>Esta acción no se puede deshacer y puede afectar reportes históricos.</p>
+    </div>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-actions" style="justify-content: center;">
+            <a href="{% url 'listar_productos' %}" class="btn btn-secondary">No, Cancelar</a>
+            <button type="submit" class="btn btn-danger">Sí, Eliminar Producto</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -16,12 +16,17 @@
         
         <div class="form-group">
             <label for="categoria">Categoría</label>
-            <select name="categoria" id="categoria" class="form-control" required>
-                <option value="">Seleccione una categoría</option>
-                {% for cat in categorias %}
-                <option value="{{ cat.id }}">{{ cat.nombre }}</option>
-                {% endfor %}
-            </select>
+            <div class="d-flex gap-1">
+                <select name="categoria" id="categoria" class="form-control" required>
+                    <option value="">Seleccione una categoría</option>
+                    {% for cat in categorias %}
+                    <option value="{{ cat.id }}">{{ cat.nombre }}</option>
+                    {% endfor %}
+                </select>
+                <a href="{% url 'crear_categoria' %}" class="btn btn-secondary" title="Nueva Categoría">
+                    <i class="fas fa-plus"></i>
+                </a>
+            </div>
         </div>
 
         <div class="form-group">
@@ -70,9 +75,17 @@
         </div>
         
         <div class="form-actions">
-            <a href="{% url 'listar_productos' %}" class="btn btn-secondary">Cancelar</a>
-            <button type="submit" class="btn btn-primary">Guardar Producto</button>
+            <a href="{% url 'listar_productos' %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancelar
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Guardar Producto
+            </button>
         </div>
     </form>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/inventario/inventario.js' %}"></script>
 {% endblock %}

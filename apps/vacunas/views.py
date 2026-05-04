@@ -41,3 +41,33 @@ def registrar_vacuna(request, mascota_pk):
             messages.error(request, f'Error al registrar vacuna: {e}')
             
     return render(request, 'vacunas/registrar_vacuna.html', {'mascota': mascota})
+
+@login_required
+def registrar_desparasitacion(request, mascota_pk):
+    mascota = get_object_or_404(Mascota, pk=mascota_pk)
+    if request.method == 'POST':
+        tipo = request.POST.get('tipo')
+        producto = request.POST.get('producto')
+        fecha = request.POST.get('fecha')
+        proxima = request.POST.get('proxima')
+        peso = request.POST.get('peso')
+        
+        try:
+            Desparasitacion.objects.create(
+                mascota=mascota,
+                tipo=tipo,
+                producto=producto,
+                fecha_aplicacion=fecha,
+                proxima_fecha=proxima if proxima else None,
+                peso_actual=peso
+            )
+            # Update pet weight
+            mascota.peso = peso
+            mascota.save()
+            
+            messages.success(request, 'Desparasitación registrada correctamente.')
+            return redirect('ver_vacunas', mascota_pk=mascota.pk)
+        except Exception as e:
+            messages.error(request, f'Error al registrar desparasitación: {e}')
+            
+    return render(request, 'vacunas/registrar_desparasitacion.html', {'mascota': mascota})

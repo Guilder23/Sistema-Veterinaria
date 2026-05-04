@@ -1,0 +1,88 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Factura #{{ factura.id }} - VetCare{% endblock %}
+
+{% block page_title %}Factura #{{ factura.id }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/facturacion/facturacion.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card invoice-container">
+    <div class="invoice-header">
+        <div class="company-info">
+            <div class="logo">
+                <i class="fas fa-paw"></i>
+                <span>VetCare</span>
+            </div>
+            <p>Calle Principal #123, Ciudad</p>
+            <p>Tel: +123 456 789</p>
+            <p>RNC: 123-45678-9</p>
+        </div>
+        <div class="invoice-meta">
+            <h3>FACTURA</h3>
+            <p><strong>No:</strong> {{ factura.id }}</p>
+            <p><strong>Fecha:</strong> {{ factura.fecha|date:"d/m/Y H:i" }}</p>
+            <p><strong>Estado:</strong> {% if factura.pagado %}PAGADO{% else %}PENDIENTE{% endif %}</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="invoice-billing">
+        <div class="bill-to">
+            <p class="section-label">FACTURAR A:</p>
+            <h4>{{ factura.cliente.nombre_completo }}</h4>
+            <p><strong>Tel:</strong> {{ factura.cliente.telefono }}</p>
+            <p><strong>Email:</strong> {{ factura.cliente.email }}</p>
+        </div>
+        <div class="payment-method">
+            <p class="section-label">MÉTODO DE PAGO:</p>
+            <p>{{ factura.get_metodo_pago_display }}</p>
+        </div>
+    </div>
+
+    <div class="invoice-items">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th class="text-center">Cant.</th>
+                    <th class="text-right">Precio Unit.</th>
+                    <th class="text-right">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detalle in factura.detalles.all %}
+                <tr>
+                    <td>{{ detalle.producto.nombre }}</td>
+                    <td class="text-center">{{ detalle.cantidad }}</td>
+                    <td class="text-right">${{ detalle.precio_unitario }}</td>
+                    <td class="text-right">${{ detalle.subtotal }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="3" class="text-right">TOTAL:</th>
+                    <th class="text-right total-amount">${{ factura.total }}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="invoice-footer">
+        <p>Gracias por confiar en <strong>VetCare</strong>.</p>
+        <div class="no-print">
+            <button onclick="window.print()" class="btn btn-primary">
+                <i class="fas fa-print"></i> Imprimir
+            </button>
+            <a href="{% url 'listar_facturas' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

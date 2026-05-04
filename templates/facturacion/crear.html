@@ -35,7 +35,7 @@
         </div>
 
         <div class="products-selection">
-            <h5>Selección de Productos</h5>
+            <h5><i class="fas fa-shopping-cart"></i> Selección de Productos</h5>
             <div id="products-container">
                 <div class="product-row grid-2">
                     <div class="form-group">
@@ -43,7 +43,9 @@
                         <select name="productos[]" class="form-control" required>
                             <option value="">Seleccione producto</option>
                             {% for prod in productos %}
-                            <option value="{{ prod.id }}">{{ prod.nombre }} (${{ prod.precio_venta }})</option>
+                            <option value="{{ prod.id }}" data-price="{{ prod.precio_venta }}">
+                                {{ prod.nombre }} (${{ prod.precio_venta }}) - Stock: {{ prod.stock }}
+                            </option>
                             {% endfor %}
                         </select>
                     </div>
@@ -53,29 +55,29 @@
                     </div>
                 </div>
             </div>
-            <button type="button" id="add-product" class="btn btn-secondary btn-small">
-                <i class="fas fa-plus"></i> Agregar otro producto
-            </button>
+            
+            <div class="d-flex justify-between align-center">
+                <button type="button" id="add-product" class="btn btn-secondary btn-small">
+                    <i class="fas fa-plus"></i> Agregar otro producto
+                </button>
+                <div class="total-summary">
+                    TOTAL: <span>$ <span id="total-amount">0.00</span></span>
+                </div>
+            </div>
         </div>
         
         <div class="form-actions">
-            <a href="{% url 'listar_facturas' %}" class="btn btn-secondary">Cancelar</a>
-            <button type="submit" class="btn btn-primary">Generar Factura</button>
+            <a href="{% url 'listar_facturas' %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancelar
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-file-invoice-dollar"></i> Generar Factura
+            </button>
         </div>
     </form>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    document.getElementById('add-product').addEventListener('click', function() {
-        const container = document.getElementById('products-container');
-        const firstRow = container.querySelector('.product-row');
-        const newRow = firstRow.cloneNode(true);
-        // Clear selected value in the clone
-        newRow.querySelector('select').value = "";
-        newRow.querySelector('input').value = "1";
-        container.appendChild(newRow);
-    });
-</script>
+<script src="{% static 'js/facturacion/facturacion.js' %}"></script>
 {% endblock %}

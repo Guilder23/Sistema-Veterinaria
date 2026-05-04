@@ -51,9 +51,17 @@
         </div>
         
         <div class="form-actions">
-            <a href="{% url 'listar_citas' %}" class="btn btn-secondary">Cancelar</a>
-            <button type="submit" class="btn btn-primary">Programar Cita</button>
+            <a href="{% url 'listar_citas' %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancelar
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-calendar-check"></i> Programar Cita
+            </button>
         </div>
     </form>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/citas/citas.js' %}"></script>
 {% endblock %}

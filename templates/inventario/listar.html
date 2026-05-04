@@ -13,9 +13,14 @@
 <div class="card">
     <div class="card-header">
         <h4>Productos y Medicamentos</h4>
-        <a href="{% url 'crear_producto' %}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Nuevo Producto
-        </a>
+        <div class="header-actions">
+            <a href="{% url 'listar_categorias' %}" class="btn btn-secondary">
+                <i class="fas fa-tags"></i> Categorías
+            </a>
+            <a href="{% url 'crear_producto' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nuevo Producto
+            </a>
+        </div>
     </div>
     
     <div class="table-responsive">
@@ -28,6 +33,7 @@
                     <th>Precio Venta</th>
                     <th>Vencimiento</th>
                     <th>Estado</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,14 +62,26 @@
                         <span class="status-badge ok">Disponible</span>
                         {% endif %}
                     </td>
+                    <td class="actions">
+                        <a href="{% url 'editar_producto' producto.pk %}" class="btn-action edit" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'eliminar_producto' producto.pk %}" class="btn-action delete" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="6" class="empty-state">No hay productos en el inventario.</td>
+                    <td colspan="7" class="empty-state">No hay productos en el inventario.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/inventario/inventario.js' %}"></script>
 {% endblock %}

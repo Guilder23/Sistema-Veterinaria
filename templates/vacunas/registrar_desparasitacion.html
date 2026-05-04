@@ -1,0 +1,61 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Registrar Desparasitación - {{ mascota.nombre }}{% endblock %}
+
+{% block page_title %}Registrar Desparasitación: {{ mascota.nombre }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/vacunas/vacunas.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card form-card">
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="tipo">Tipo</label>
+                <select name="tipo" id="tipo" class="form-control" required>
+                    <option value="interna">Interna</option>
+                    <option value="externa">Externa</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="producto">Producto</label>
+                <input type="text" name="producto" id="producto" class="form-control" placeholder="Ej: NexGard, Drontal" required>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="fecha">Fecha de Aplicación</label>
+                <input type="date" name="fecha" id="fecha" class="form-control" value="{{ today|date:'Y-m-d' }}" required>
+            </div>
+            <div class="form-group">
+                <label for="proxima">Próxima Fecha (Opcional)</label>
+                <input type="date" name="proxima" id="proxima" class="form-control">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="peso">Peso Actual (kg)</label>
+            <input type="number" step="0.01" name="peso" id="peso" class="form-control" value="{{ mascota.peso }}" required>
+        </div>
+        
+        <div class="form-actions">
+            <a href="{% url 'ver_vacunas' mascota.pk %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancelar
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Guardar Registro
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/vacunas/vacunas.js' %}"></script>
+{% endblock %}

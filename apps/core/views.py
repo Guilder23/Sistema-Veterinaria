@@ -4,11 +4,30 @@ from apps.citas.models import Cita
 from apps.mascotas.models import Mascota
 from apps.clientes.models import Cliente
 from apps.facturacion.models import Factura
+from apps.inventario.models import Producto
 from django.utils import timezone
 from django.db.models import Sum
 
 def landing_page(request):
     return render(request, 'core/index.html')
+
+@login_required
+def buscar(request):
+    query = request.GET.get('q', '')
+    if query:
+        # Search in pets, clients, and products
+        mascotas = Mascota.objects.filter(nombre__icontains=query)
+        clientes = Cliente.objects.filter(nombre_completo__icontains=query)
+        productos = Producto.objects.filter(nombre__icontains=query)
+    else:
+        mascotas = clientes = productos = []
+        
+    return render(request, 'core/buscar.html', {
+        'mascotas': mascotas,
+        'clientes': clientes,
+        'productos': productos,
+        'query': query
+    })
 
 @login_required
 def dashboard(request):

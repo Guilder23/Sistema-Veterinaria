@@ -1,0 +1,29 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Eliminar Categoría - {{ categoria.nombre }}{% endblock %}
+
+{% block page_title %}Eliminar Categoría: {{ categoria.nombre }}{% endblock %}
+
+{% block content %}
+<div class="card delete-card">
+    <div class="delete-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <h3>¿Estás seguro?</h3>
+    <p>Estás a punto de eliminar la categoría <strong>{{ categoria.nombre }}</strong>.</p>
+    <p class="warning-text">Nota: Esto no eliminará los productos asociados, pero quedarán sin categoría.</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-actions center">
+            <a href="{% url 'listar_categorias' %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancelar
+            </a>
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Confirmar Eliminación
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

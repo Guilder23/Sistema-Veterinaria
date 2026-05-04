@@ -37,7 +37,7 @@
                     <td>
                         <img src="{% if mascota.foto %}{{ mascota.foto.url }}{% else %}{% static 'img/default-pet.png' %}{% endif %}" alt="Pet" class="pet-thumb">
                     </td>
-                    <td>{{ mascota.nombre }}</td>
+                    <td class="pet-name-td">{{ mascota.nombre }}</td>
                     <td>{{ mascota.especie }} / {{ mascota.raza }}</td>
                     <td>{{ mascota.cliente.nombre_completo }}</td>
                     <td>{{ mascota.get_sexo_display }}</td>
@@ -66,4 +66,8 @@
         </table>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/mascotas/mascotas.js' %}"></script>
 {% endblock %}
