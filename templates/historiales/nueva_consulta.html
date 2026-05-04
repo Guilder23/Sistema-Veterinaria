@@ -1,0 +1,48 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Nueva Consulta - {{ historial.mascota.nombre }}{% endblock %}
+
+{% block page_title %}Registrar Consulta: {{ historial.mascota.nombre }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/historiales/historial.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card form-card">
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="motivo">Motivo de Consulta</label>
+            <input type="text" name="motivo" id="motivo" class="form-control" placeholder="Ej: Vómitos, Control de peso" required>
+        </div>
+
+        <div class="form-group">
+            <label for="peso">Peso Actual (kg)</label>
+            <input type="number" step="0.01" name="peso" id="peso" class="form-control" value="{{ historial.mascota.peso }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="diagnostico">Diagnóstico</label>
+            <textarea name="diagnostico" id="diagnostico" class="form-control" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="tratamiento">Tratamiento</label>
+            <textarea name="tratamiento" id="tratamiento" class="form-control" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="receta">Receta Médica (Opcional)</label>
+            <textarea name="receta" id="receta" class="form-control" placeholder="Medicamentos, dosis, frecuencia..."></textarea>
+        </div>
+        
+        <div class="form-actions">
+            <a href="{% url 'ver_historial' historial.mascota.pk %}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Guardar Consulta</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

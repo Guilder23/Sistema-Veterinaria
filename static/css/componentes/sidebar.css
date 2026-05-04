@@ -1,0 +1,120 @@
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    color: var(--white);
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: var(--transition);
+}
+
+.sidebar-header {
+    padding: 2rem 1.5rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.logo i {
+    color: var(--primary-color);
+}
+
+.subtitle {
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+    margin-top: 0.2rem;
+    padding-left: 2.3rem;
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 1rem 0;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+}
+
+.sidebar-nav li {
+    padding: 0.2rem 1.5rem;
+}
+
+.sidebar-nav a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    transition: var(--transition);
+    font-size: 0.95rem;
+}
+
+.sidebar-nav li.active a,
+.sidebar-nav a:hover {
+    background: rgba(78, 115, 223, 0.15);
+    color: var(--white);
+}
+
+.sidebar-nav li.active a i {
+    color: var(--primary-color);
+}
+
+.sidebar-nav i {
+    width: 20px;
+    font-size: 1.1rem;
+}
+
+.sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    position: relative;
+}
+
+.user-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.user-details {
+    flex: 1;
+}
+
+.user-details .name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.user-details .role {
+    font-size: 0.75rem;
+    color: var(--secondary-color);
+    margin: 0;
+}
+
+.logout-btn {
+    color: rgba(255, 255, 255, 0.5);
+    transition: var(--transition);
+}
+
+.logout-btn:hover {
+    color: var(--danger-color);
+}

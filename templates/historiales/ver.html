@@ -1,0 +1,79 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Historial Clínico - {{ mascota.nombre }}{% endblock %}
+
+{% block page_title %}Historial Clínico: {{ mascota.nombre }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/historiales/historial.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="historial-container">
+    <!-- Pet Info Sidebar -->
+    <div class="pet-sidebar">
+        <div class="card">
+            <img src="{% if mascota.foto %}{{ mascota.foto.url }}{% else %}{% static 'img/default-pet.png' %}{% endif %}" alt="Pet" class="pet-img-large">
+            <h3>{{ mascota.nombre }}</h3>
+            <p class="pet-species">{{ mascota.especie }} - {{ mascota.raza }}</p>
+            
+            <div class="pet-details">
+                <div class="detail-item">
+                    <span class="label">Dueño:</span>
+                    <span class="value">{{ mascota.cliente.nombre_completo }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Edad:</span>
+                    <span class="value">{{ mascota.fecha_nacimiento|timesince }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Peso Actual:</span>
+                    <span class="value">{{ mascota.peso }} kg</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">Sexo:</span>
+                    <span class="value">{{ mascota.get_sexo_display }}</span>
+                </div>
+            </div>
+            
+            <a href="{% url 'nueva_consulta' historial.pk %}" class="btn btn-primary btn-full mt-1">Nueva Consulta</a>
+        </div>
+    </div>
+
+    <!-- Timeline of events -->
+    <div class="historial-timeline">
+        <div class="timeline-header">
+            <h4>Actividad Clínica</h4>
+        </div>
+        
+        <div class="timeline">
+            {% for consulta in consultas %}
+            <div class="timeline-item">
+                <div class="timeline-icon"><i class="fas fa-stethoscope"></i></div>
+                <div class="timeline-content card">
+                    <div class="timeline-date">{{ consulta.fecha|date:"d M Y, H:i" }}</div>
+                    <h5>Consulta: {{ consulta.motivo }}</h5>
+                    <p class="veterinario">Dr. {{ consulta.veterinario.get_full_name }}</p>
+                    
+                    <div class="medical-data">
+                        <h6>Diagnóstico:</h6>
+                        <p>{{ consulta.diagnostico }}</p>
+                        
+                        <h6>Tratamiento:</h6>
+                        <p>{{ consulta.tratamiento }}</p>
+                        
+                        {% if consulta.receta %}
+                        <h6>Receta:</h6>
+                        <p class="receta-box">{{ consulta.receta }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="empty-state">No hay consultas registradas aún.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

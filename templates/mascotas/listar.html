@@ -1,0 +1,69 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Mascotas - VetCare{% endblock %}
+
+{% block page_title %}Gestión de Mascotas{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/mascotas/mascotas.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4>Lista de Mascotas</h4>
+        <a href="{% url 'crear_mascota' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nueva Mascota
+        </a>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>Nombre</th>
+                    <th>Especie / Raza</th>
+                    <th>Dueño</th>
+                    <th>Sexo</th>
+                    <th>Edad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mascota in mascotas %}
+                <tr>
+                    <td>
+                        <img src="{% if mascota.foto %}{{ mascota.foto.url }}{% else %}{% static 'img/default-pet.png' %}{% endif %}" alt="Pet" class="pet-thumb">
+                    </td>
+                    <td>{{ mascota.nombre }}</td>
+                    <td>{{ mascota.especie }} / {{ mascota.raza }}</td>
+                    <td>{{ mascota.cliente.nombre_completo }}</td>
+                    <td>{{ mascota.get_sexo_display }}</td>
+                    <td>{{ mascota.fecha_nacimiento|timesince }}</td>
+                    <td class="actions">
+                        <a href="{% url 'ver_historial' mascota.pk %}" class="btn-action view" title="Ver Historial">
+                            <i class="fas fa-file-medical"></i>
+                        </a>
+                        <a href="{% url 'ver_vacunas' mascota.pk %}" class="btn-action vaccine" title="Control Vacunas">
+                            <i class="fas fa-syringe"></i>
+                        </a>
+                        <a href="{% url 'editar_mascota' mascota.pk %}" class="btn-action edit" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'eliminar_mascota' mascota.pk %}" class="btn-action delete" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="empty-state">No hay mascotas registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

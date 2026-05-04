@@ -1,0 +1,69 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Inventario - VetCare{% endblock %}
+
+{% block page_title %}Inventario de Productos{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inventario/inventario.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4>Productos y Medicamentos</h4>
+        <a href="{% url 'crear_producto' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nuevo Producto
+        </a>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Stock</th>
+                    <th>Precio Venta</th>
+                    <th>Vencimiento</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>
+                        <div class="product-info">
+                            <strong>{{ producto.nombre }}</strong>
+                            {% if producto.es_medicamento %}
+                            <span class="badge-med">Medicamento</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>{{ producto.categoria.nombre }}</td>
+                    <td>
+                        <span class="stock-value {% if producto.bajo_stock %}low{% endif %}">
+                            {{ producto.stock }}
+                        </span>
+                    </td>
+                    <td>${{ producto.precio_venta }}</td>
+                    <td>{{ producto.fecha_vencimiento|date:"d/m/Y"|default:"-" }}</td>
+                    <td>
+                        {% if producto.bajo_stock %}
+                        <span class="status-badge low">Stock Bajo</span>
+                        {% else %}
+                        <span class="status-badge ok">Disponible</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="empty-state">No hay productos en el inventario.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

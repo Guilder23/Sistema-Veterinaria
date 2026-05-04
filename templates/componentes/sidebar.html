@@ -1,0 +1,82 @@
+{% load static %}
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="logo">
+            <i class="fas fa-paw"></i>
+            <span>VetCare</span>
+        </div>
+        <p class="subtitle">Sistema Veterinario</p>
+    </div>
+
+    <nav class="sidebar-nav">
+        <ul>
+            <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <a href="{% url 'dashboard' %}">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="{% if 'citas' in request.path %}active{% endif %}">
+                <a href="{% url 'listar_citas' %}">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>Citas</span>
+                </a>
+            </li>
+            <li class="{% if 'mascotas' in request.path %}active{% endif %}">
+                <a href="{% url 'listar_mascotas' %}">
+                    <i class="fas fa-paw"></i>
+                    <span>Mascotas</span>
+                </a>
+            </li>
+            <li class="{% if 'clientes' in request.path %}active{% endif %}">
+                <a href="{% url 'listar_clientes' %}">
+                    <i class="fas fa-users"></i>
+                    <span>Clientes</span>
+                </a>
+            </li>
+            <li class="{% if 'historiales' in request.path %}active{% endif %}">
+                <a href="{% url 'listar_mascotas' %}">
+                    <i class="fas fa-file-medical"></i>
+                    <span>Historial Clínico</span>
+                </a>
+            </li>
+            <li class="{% if 'inventario' in request.path %}active{% endif %}">
+                <a href="{% url 'listar_productos' %}">
+                    <i class="fas fa-box"></i>
+                    <span>Inventario</span>
+                </a>
+            </li>
+            <li class="{% if 'facturacion' in request.path %}active{% endif %}">
+                <a href="{% url 'listar_facturas' %}">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Facturación</span>
+                </a>
+            </li>
+            <li class="{% if 'reportes' in request.path %}active{% endif %}">
+                <a href="{% url 'reportes_general' %}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Reportes</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fas fa-cog"></i>
+                    <span>Configuración</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="user-info">
+            <img src="{% if user.foto %}{{ user.foto.url }}{% else %}{% static 'img/default-user.png' %}{% endif %}" alt="User">
+            <div class="user-details">
+                <p class="name">{{ user.get_full_name|default:user.username }}</p>
+                <p class="role">{{ user.get_rol_display }}</p>
+            </div>
+            <a href="{% url 'logout' %}" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </div>
+    </div>
+</aside>

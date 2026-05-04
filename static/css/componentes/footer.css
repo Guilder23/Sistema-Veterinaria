@@ -1,0 +1,30 @@
+.footer {
+    padding: 1.5rem 2rem;
+    background: var(--white);
+    border-top: 1px solid #e3e6f0;
+    margin-top: auto;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-left p, .footer-right p {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+    margin: 0;
+}
+
+.footer-left strong {
+    color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+}

@@ -1,0 +1,47 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Nuevo Cliente - VetCare{% endblock %}
+
+{% block page_title %}Agregar Cliente{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/clientes/clientes.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card form-card">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="nombre">Nombre Completo</label>
+            <input type="text" name="nombre" id="nombre" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="identificacion">CI / Identificación</label>
+            <input type="text" name="identificacion" id="identificacion" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="telefono">Teléfono</label>
+            <input type="text" name="telefono" id="telefono" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="correo">Correo Electrónico</label>
+            <input type="email" name="correo" id="correo" class="form-control">
+        </div>
+        
+        <div class="form-group">
+            <label for="direccion">Dirección</label>
+            <textarea name="direccion" id="direccion" class="form-control" required></textarea>
+        </div>
+        
+        <div class="form-actions">
+            <a href="{% url 'listar_clientes' %}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Guardar Cliente</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

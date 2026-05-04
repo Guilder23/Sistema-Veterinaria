@@ -1,0 +1,54 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Reportes - VetCare{% endblock %}
+
+{% block page_title %}Reportes Generales{% endblock %}
+
+{% block content %}
+<div class="dashboard-stats">
+    <div class="stat-card">
+        <div class="stat-icon orange">
+            <i class="fas fa-dollar-sign"></i>
+        </div>
+        <div class="stat-details">
+            <p class="stat-label">Ingresos del Mes</p>
+            <h3 class="stat-value">${{ total_revenue }}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="grid-item card">
+        <h4>Distribución por Especie</h4>
+        <div class="chart-container" style="height: 300px;">
+            <canvas id="speciesChart"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('speciesChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Perros', 'Gatos', 'Otros'],
+                    datasets: [{
+                        data: [{{ perros }}, {{ gatos }}, {{ otros }}],
+                        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

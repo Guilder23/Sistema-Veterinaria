@@ -1,0 +1,74 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Nueva Mascota - VetCare{% endblock %}
+
+{% block page_title %}Registrar Mascota{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/mascotas/mascotas.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card form-card">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="cliente">Dueño (Cliente)</label>
+            <select name="cliente" id="cliente" class="form-control" required>
+                <option value="">Seleccione un cliente</option>
+                {% for cliente in clientes %}
+                <option value="{{ cliente.id }}">{{ cliente.nombre_completo }} ({{ cliente.identificacion }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="nombre">Nombre de la Mascota</label>
+                <input type="text" name="nombre" id="nombre" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="especie">Especie</label>
+                <input type="text" name="especie" id="especie" class="form-control" placeholder="Ej: Perro, Gato" required>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="raza">Raza</label>
+                <input type="text" name="raza" id="raza" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="peso">Peso (kg)</label>
+                <input type="number" step="0.01" name="peso" id="peso" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="sexo">Sexo</label>
+                <select name="sexo" id="sexo" class="form-control" required>
+                    <option value="M">Macho</option>
+                    <option value="H">Hembra</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="foto">Foto de la Mascota</label>
+            <input type="file" name="foto" id="foto" class="form-control" accept="image/*">
+        </div>
+        
+        <div class="form-actions">
+            <a href="{% url 'listar_mascotas' %}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Guardar Mascota</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

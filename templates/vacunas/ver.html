@@ -1,0 +1,58 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Vacunas - {{ mascota.nombre }}{% endblock %}
+
+{% block page_title %}Control de Vacunas: {{ mascota.nombre }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/vacunas/vacunas.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="vacunas-container">
+    <div class="card">
+        <div class="card-header">
+            <h4>Registro de Vacunas</h4>
+            <a href="{% url 'registrar_vacuna' mascota.pk %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Registrar Vacuna
+            </a>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Vacuna</th>
+                        <th>Fecha Aplicación</th>
+                        <th>Próxima Dosis</th>
+                        <th>Lote</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vacuna in vacunas %}
+                    <tr>
+                        <td><strong>{{ vacuna.nombre_vacuna }}</strong></td>
+                        <td>{{ vacuna.fecha_aplicacion|date:"d/m/Y" }}</td>
+                        <td>
+                            {% if vacuna.proxima_dosis %}
+                            <span class="next-dose">{{ vacuna.proxima_dosis|date:"d/m/Y" }}</span>
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>{{ vacuna.lote|default:"-" }}</td>
+                        <td>{{ vacuna.observaciones|default:"-" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="empty-state">No hay vacunas registradas.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

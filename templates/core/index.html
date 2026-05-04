@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VetCare - Tu Clínica Veterinaria de Confianza</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/core/landing.css' %}">
+</head>
+<body>
+    <nav class="landing-nav">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-paw"></i>
+                <span>VetCare</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#servicios">Servicios</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+                <li><a href="{% url 'login' %}" class="btn-login-nav">Acceder al Sistema</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header id="inicio" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Cuidamos a los que más quieres</h1>
+                <p>Brindamos la mejor atención médica para tus mascotas con tecnología de punta y un equipo profesional altamente calificado.</p>
+                <div class="hero-btns">
+                    <a href="https://wa.me/591XXXXXXXX" class="btn btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> Agendar por WhatsApp
+                    </a>
+                    <a href="#servicios" class="btn btn-outline">Nuestros Servicios</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Veterinaria">
+            </div>
+        </div>
+    </header>
+
+    <section id="servicios" class="servicios">
+        <div class="container">
+            <h2 class="section-title">Nuestros Servicios</h2>
+            <div class="servicios-grid">
+                <div class="servicio-card">
+                    <i class="fas fa-stethoscope"></i>
+                    <h3>Consulta General</h3>
+                    <p>Evaluación completa del estado de salud de tu mascota.</p>
+                </div>
+                <div class="servicio-card">
+                    <i class="fas fa-syringe"></i>
+                    <h3>Vacunación</h3>
+                    <p>Esquemas de vacunación completos para perros y gatos.</p>
+                </div>
+                <div class="servicio-card">
+                    <i class="fas fa-microscope"></i>
+                    <h3>Laboratorio</h3>
+                    <p>Análisis clínicos rápidos y precisos.</p>
+                </div>
+                <div class="servicio-card">
+                    <i class="fas fa-cut"></i>
+                    <h3>Peluquería</h3>
+                    <p>Servicios de estética y baño profesional.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="landing-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <div class="logo">
+                        <i class="fas fa-paw"></i>
+                        <span>VetCare</span>
+                    </div>
+                    <p>Pasión por la salud animal.</p>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contacto</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> Calle Falsa 123, Ciudad</p>
+                    <p><i class="fas fa-phone"></i> +591 XXXXXXXX</p>
+                </div>
+                <div class="footer-social">
+                    <h4>Redes Sociales</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 VetCare. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/591XXXXXXXX" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+</body>
+</html>

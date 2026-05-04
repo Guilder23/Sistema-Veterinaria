@@ -1,0 +1,49 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Registrar Vacuna - {{ mascota.nombre }}{% endblock %}
+
+{% block page_title %}Registrar Vacuna: {{ mascota.nombre }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/vacunas/vacunas.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card form-card">
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="nombre">Nombre de la Vacuna</label>
+            <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Ej: Triple Felina, Parvovirus" required>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="fecha">Fecha de Aplicación</label>
+                <input type="date" name="fecha" id="fecha" class="form-control" value="{{ today|date:'Y-m-d' }}" required>
+            </div>
+            <div class="form-group">
+                <label for="proxima">Próxima Dosis (Opcional)</label>
+                <input type="date" name="proxima" id="proxima" class="form-control">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="lote">Lote</label>
+            <input type="text" name="lote" id="lote" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="observaciones">Observaciones</label>
+            <textarea name="observaciones" id="observaciones" class="form-control"></textarea>
+        </div>
+        
+        <div class="form-actions">
+            <a href="{% url 'ver_vacunas' mascota.pk %}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Guardar Registro</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

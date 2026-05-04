@@ -1,0 +1,129 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - VetCare{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/core/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-stats">
+    <div class="stat-card">
+        <div class="stat-icon purple">
+            <i class="far fa-calendar-check"></i>
+        </div>
+        <div class="stat-details">
+            <p class="stat-label">Citas de hoy</p>
+            <h3 class="stat-value">{{ citas_hoy }}</h3>
+            <a href="#" class="stat-link">Ver agenda <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon green">
+            <i class="fas fa-paw"></i>
+        </div>
+        <div class="stat-details">
+            <p class="stat-label">Mascotas registradas</p>
+            <h3 class="stat-value">{{ total_mascotas }}</h3>
+            <a href="#" class="stat-link">Ver todas <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon blue">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-details">
+            <p class="stat-label">Clientes registrados</p>
+            <h3 class="stat-value">{{ total_clientes }}</h3>
+            <a href="#" class="stat-link">Ver todos <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon orange">
+            <i class="fas fa-dollar-sign"></i>
+        </div>
+        <div class="stat-details">
+            <p class="stat-label">Ingresos del mes</p>
+            <h3 class="stat-value">${{ ingresos_mes }}</h3>
+            <a href="#" class="stat-link">Ver reporte <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="grid-item card">
+        <div class="card-header">
+            <h4>Citas de hoy</h4>
+            <a href="#" class="link-small">Ver todas</a>
+        </div>
+        <div class="appointments-list">
+            {% for cita in proximas_citas %}
+            <div class="appointment-item">
+                <div class="time">{{ cita.hora|time:"H:i" }}</div>
+                <div class="pet-info">
+                    <img src="{% if cita.mascota.foto %}{{ cita.mascota.foto.url }}{% else %}{% static 'img/default-pet.png' %}{% endif %}" alt="Pet">
+                    <div>
+                        <p class="pet-name">{{ cita.mascota.nombre }}</p>
+                        <p class="owner-name">{{ cita.mascota.cliente.nombre_completo }}</p>
+                    </div>
+                </div>
+                <div class="status-badge {{ cita.estado }}">
+                    {{ cita.get_estado_display }}
+                </div>
+            </div>
+            {% empty %}
+            <p class="empty-state">No hay citas para hoy.</p>
+            {% endfor %}
+        </div>
+        <button class="btn btn-primary btn-full mt-1">Nueva cita</button>
+    </div>
+
+    <div class="grid-item card">
+        <div class="card-header">
+            <h4>Ingresos (Este mes)</h4>
+            <select class="select-small">
+                <option>Mensual</option>
+            </select>
+        </div>
+        <div class="chart-container">
+            <!-- Chart placeholder -->
+            <canvas id="revenueChart"></canvas>
+        </div>
+    </div>
+
+    <div class="grid-item card">
+        <div class="card-header">
+            <h4>Stock bajo</h4>
+            <a href="#" class="link-small">Ver todos</a>
+        </div>
+        <div class="stock-list">
+            <!-- Example items as seen in image -->
+            <div class="stock-item">
+                <img src="{% static 'img/products/antapulgas.png' %}" alt="Product">
+                <div class="product-info">
+                    <p class="product-name">Antipulgas</p>
+                </div>
+                <div class="stock-badge low">5 unidades</div>
+            </div>
+            <div class="stock-item">
+                <img src="{% static 'img/products/vacuna.png' %}" alt="Product">
+                <div class="product-info">
+                    <p class="product-name">Vacuna Rabia</p>
+                </div>
+                <div class="stock-badge low">3 unidades</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/core/dashboard.js' %}"></script>
+{% endblock %}

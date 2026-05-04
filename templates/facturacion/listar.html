@@ -1,0 +1,65 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Facturación - VetCare{% endblock %}
+
+{% block page_title %}Facturación y Pagos{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/facturacion/facturacion.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4>Historial de Facturas</h4>
+        <a href="{% url 'crear_factura' %}" class="btn btn-primary">
+            <i class="fas fa-file-invoice-dollar"></i> Nueva Factura
+        </a>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Factura #</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Método Pago</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for factura in facturas %}
+                <tr>
+                    <td><strong>{{ factura.id }}</strong></td>
+                    <td>{{ factura.fecha|date:"d/m/Y H:i" }}</td>
+                    <td>{{ factura.cliente.nombre_completo }}</td>
+                    <td>{{ factura.get_metodo_pago_display }}</td>
+                    <td>${{ factura.total }}</td>
+                    <td>
+                        <span class="status-badge {% if factura.pagado %}paid{% else %}pending{% endif %}">
+                            {% if factura.pagado %}Pagado{% else %}Pendiente{% endif %}
+                        </span>
+                    </td>
+                    <td class="actions">
+                        <a href="#" class="btn-action view" title="Ver Detalle">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="#" class="btn-action print" title="Imprimir">
+                            <i class="fas fa-print"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="empty-state">No hay facturas registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

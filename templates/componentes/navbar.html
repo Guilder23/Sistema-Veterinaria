@@ -1,0 +1,30 @@
+<header class="navbar">
+    <div class="navbar-left">
+        <button id="toggle-sidebar" class="toggle-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="page-title">
+            <h2>{% block page_title %}Dashboard{% endblock %}</h2>
+            <p>Bienvenido, {{ user.get_full_name|default:user.username }}</p>
+        </div>
+    </div>
+
+    <div class="navbar-right">
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Buscar...">
+        </div>
+        
+        <div class="notifications">
+            <button class="icon-btn">
+                <i class="far fa-bell"></i>
+                <span class="badge">3</span>
+            </button>
+        </div>
+        
+        <div class="profile-dropdown">
+            <img src="{% if user.foto %}{{ user.foto.url }}{% else %}/static/img/default-user.png{% endif %}" alt="Profile">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </div>
+</header>
