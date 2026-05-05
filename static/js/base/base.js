@@ -54,12 +54,16 @@ document.addEventListener('DOMContentLoaded', function() {
             if (theme === 'dark') {
                 document.documentElement.setAttribute('data-theme', 'light');
                 localStorage.setItem('theme', 'light');
+                document.cookie = "theme=light; path=/; max-age=31536000";
                 if (themeIcon) themeIcon.classList.replace('fa-sun', 'fa-moon');
             } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
                 localStorage.setItem('theme', 'dark');
+                document.cookie = "theme=dark; path=/; max-age=31536000";
                 if (themeIcon) themeIcon.classList.replace('fa-moon', 'fa-sun');
             }
+            // Optional: reload to apply chart changes if they depend on server-side logic
+            // location.reload(); 
         });
     }
 

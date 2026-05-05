@@ -37,8 +37,15 @@
                 </div>
             </div>
             
-            <a href="{% url 'nueva_consulta' historial.pk %}" class="btn btn-primary btn-full mt-1">Nueva Consulta</a>
-            <a href="{% url 'nuevo_procedimiento' historial.pk %}" class="btn btn-secondary btn-full mt-1">Nuevo Procedimiento</a>
+            <a href="{% url 'nueva_consulta' historial.pk %}" class="btn btn-primary btn-full mt-1">
+                <i class="fas fa-plus"></i> Nueva Consulta
+            </a>
+            <a href="{% url 'crear_factura' %}?cliente={{ mascota.cliente.id }}&tipo=atencion" class="btn btn-success btn-full mt-1">
+                <i class="fas fa-file-invoice-dollar"></i> Cobrar Atención
+            </a>
+            <a href="{% url 'nuevo_procedimiento' historial.pk %}" class="btn btn-secondary btn-full mt-1">
+                <i class="fas fa-procedures"></i> Nuevo Procedimiento
+            </a>
         </div>
     </div>
 
@@ -68,7 +75,12 @@
                 <div class="timeline-icon"><i class="fas fa-stethoscope"></i></div>
                 <div class="timeline-content card">
                     <div class="timeline-date">{{ consulta.fecha|date:"d M Y, H:i" }}</div>
-                    <h5>Consulta: {{ consulta.motivo }}</h5>
+                    <div class="consulta-header">
+                        <h5>Consulta: {{ consulta.motivo }}</h5>
+                        <a href="{% url 'crear_factura' %}?cliente={{ mascota.cliente.id }}&tipo=atencion&servicio=Consulta: {{ consulta.motivo }}" class="btn-action-small" title="Facturar esta consulta">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </a>
+                    </div>
                     <p class="veterinario">Dr. {{ consulta.veterinario.get_full_name }}</p>
                     
                     <div class="medical-data">

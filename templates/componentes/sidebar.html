@@ -46,10 +46,16 @@
                     <span>Inventario</span>
                 </a>
             </li>
-            <li class="{% if 'facturacion' in request.path %}active{% endif %}">
-                <a href="{% url 'listar_facturas' %}">
-                    <i class="fas fa-file-invoice-dollar"></i>
-                    <span>Facturación</span>
+            <li class="{% if 'facturacion' in request.path and 'tipo=venta' in request.get_full_path or 'facturacion' in request.path and not 'tipo=' in request.get_full_path %}active{% endif %}">
+                <a href="{% url 'listar_facturas' %}?tipo=venta">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Ventas</span>
+                </a>
+            </li>
+            <li class="{% if 'facturacion' in request.path and 'tipo=atencion' in request.get_full_path %}active{% endif %}">
+                <a href="{% url 'listar_facturas' %}?tipo=atencion">
+                    <i class="fas fa-hand-holding-medical"></i>
+                    <span>Pagos Atención</span>
                 </a>
             </li>
             <li class="{% if 'reportes' in request.path %}active{% endif %}">

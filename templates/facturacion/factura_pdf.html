@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @page {
+            size: letter;
+            margin: 2cm;
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            color: #333;
+            font-size: 10pt;
+        }
+        .header {
+            border-bottom: 2px solid #4e73df;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .company-name {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #4e73df;
+        }
+        .invoice-title {
+            font-size: 18pt;
+            text-align: right;
+            color: #4e73df;
+        }
+        .info-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .info-table td {
+            vertical-align: top;
+        }
+        .section-title {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 8pt;
+            color: #858796;
+            margin-bottom: 5px;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        .items-table th {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 10px;
+            text-align: left;
+            font-weight: bold;
+        }
+        .items-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e3e6f0;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .total-section {
+            width: 100%;
+        }
+        .total-box {
+            float: right;
+            width: 200px;
+        }
+        .total-row {
+            padding: 5px 0;
+        }
+        .grand-total {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #4e73df;
+            border-top: 2px solid #4e73df;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 8pt;
+            color: #858796;
+            border-top: 1px solid #e3e6f0;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <table style="width: 100%;">
+            <tr>
+                <td>
+                    <div class="company-name">{{ empresa.nombre }}</div>
+                    <div>{{ empresa.direccion }}</div>
+                    <div>Tel: {{ empresa.telefono }}</div>
+                    <div>RNC: {{ empresa.rnc }}</div>
+                </td>
+                <td class="text-right">
+                    <div class="invoice-title">{% if factura.tipo == 'venta' %}FACTURA DE VENTA{% else %}FACTURA DE ATENCIÓN{% endif %}</div>
+                    <div><strong>No:</strong> {{ factura.id }}</div>
+                    <div><strong>Fecha:</strong> {{ factura.fecha|date:"d/m/Y H:i" }}</div>
+                    <div><strong>Estado:</strong> {% if factura.pagado %}PAGADO{% else %}PENDIENTE{% endif %}</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <table class="info-table">
+        <tr>
+            <td width="50%">
+                <div class="section-title">Facturar a:</div>
+                <div style="font-size: 12pt; font-weight: bold;">{{ factura.cliente.nombre_completo }}</div>
+                <div>Tel: {{ factura.cliente.telefono }}</div>
+                <div>Email: {{ factura.cliente.email }}</div>
+            </td>
+            <td width="50%">
+                <div class="section-title">Método de Pago:</div>
+                <div>{{ factura.get_metodo_pago_display }}</div>
+            </td>
+        </tr>
+    </table>
+
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th width="50%">Descripción</th>
+                <th class="text-center" width="10%">Cant.</th>
+                <th class="text-right" width="20%">Precio Unit.</th>
+                <th class="text-right" width="20%">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detalle in factura.detalles.all %}
+            <tr>
+                <td>{{ detalle.producto.nombre|default:detalle.servicio }}</td>
+                <td class="text-center">{{ detalle.cantidad }}</td>
+                <td class="text-right">${{ detalle.precio_unitario }}</td>
+                <td class="text-right">${{ detalle.subtotal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="total-section">
+        <div class="total-box">
+            <table style="width: 100%;">
+                <tr>
+                    <td class="text-right"><strong>Subtotal:</strong></td>
+                    <td class="text-right">${{ factura.total }}</td>
+                </tr>
+                <tr class="grand-total">
+                    <td class="text-right"><strong>TOTAL:</strong></td>
+                    <td class="text-right"><strong>${{ factura.total }}</strong></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="footer">
+        Gracias por su preferencia. VetCare - Sistema de Gestión Veterinaria
+    </div>
+</body>
+</html>

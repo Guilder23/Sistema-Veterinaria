@@ -51,7 +51,10 @@
         <div class="stat-details">
             <p class="stat-label">Ingresos del mes</p>
             <h3 class="stat-value">${{ ingresos_mes }}</h3>
-            <a href="{% url 'reportes_general' %}" class="stat-link">Ver reporte <i class="fas fa-arrow-right"></i></a>
+            <div class="mini-stats">
+                <span title="Atención"><i class="fas fa-stethoscope"></i> ${{ ingresos_atencion }}</span>
+                <span title="Ventas"><i class="fas fa-shopping-bag"></i> ${{ ingresos_venta }}</span>
+            </div>
         </div>
     </div>
 </div>
@@ -153,11 +156,17 @@
             scales: {
                 y: {
                     beginAtZero: true,
+                    grid: { color: '{{ grid_color }}' },
                     ticks: {
+                        color: '{{ text_color }}',
                         callback: function(value) {
                             return '$' + value;
                         }
                     }
+                },
+                x: {
+                    grid: { color: '{{ grid_color }}' },
+                    ticks: { color: '{{ text_color }}' }
                 }
             }
         }

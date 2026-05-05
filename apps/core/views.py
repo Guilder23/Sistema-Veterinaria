@@ -42,7 +42,10 @@ def dashboard(request):
     
     # Total revenue this month
     start_of_month = today.replace(day=1)
-    ingresos_mes = Factura.objects.filter(fecha__gte=start_of_month, pagado=True).aggregate(Sum('total'))['total__sum'] or 0
+    facturas_mes = Factura.objects.filter(fecha__gte=start_of_month, pagado=True)
+    ingresos_mes = facturas_mes.aggregate(Sum('total'))['total__sum'] or 0
+    ingresos_atencion = facturas_mes.filter(tipo='atencion').aggregate(Sum('total'))['total__sum'] or 0
+    ingresos_venta = facturas_mes.filter(tipo='venta').aggregate(Sum('total'))['total__sum'] or 0
     
     # Recent activity
     proximas_citas = Cita.objects.filter(fecha__gte=today).order_by('fecha', 'hora')[:3]
@@ -63,17 +66,26 @@ def dashboard(request):
     especies_data = Mascota.objects.values('especie').annotate(count=Count('id')).order_by('-count')
     especies_labels = [data['especie'] for data in especies_data]
     especies_values = [data['count'] for data in especies_data]
+
+    # Theme preference for charts
+    is_dark_mode = request.COOKIES.get('theme') == 'dark'
+    text_color = '#f1f5f9' if is_dark_mode else '#333333'
+    grid_color = '#334155' if is_dark_mode else '#e3e6f0'
     
     context = {
         'citas_hoy': citas_hoy,
         'total_mascotas': total_mascotas,
         'total_clientes': total_clientes,
         'ingresos_mes': ingresos_mes,
+        'ingresos_atencion': ingresos_atencion,
+        'ingresos_venta': ingresos_venta,
         'proximas_citas': proximas_citas,
         'ultimas_mascotas': ultimas_mascotas,
         'chart_labels': json.dumps(chart_labels),
         'chart_values': json.dumps(chart_values),
         'especies_labels': json.dumps(especies_labels),
         'especies_values': json.dumps(especies_values),
+        'text_color': text_color,
+        'grid_color': grid_color,
     }
     return render(request, 'core/dashboard.html', context)

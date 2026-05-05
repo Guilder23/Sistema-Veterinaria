@@ -42,6 +42,19 @@
     margin-bottom: 0.2rem;
 }
 
+.mini-stats {
+    display: flex;
+    gap: 0.8rem;
+    font-size: 0.7rem;
+    color: var(--secondary-color);
+}
+
+.mini-stats span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
 .stat-link {
     font-size: 0.75rem;
     text-decoration: none;

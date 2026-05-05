@@ -76,7 +76,10 @@
     <div class="invoice-footer">
         <p>Gracias por confiar en <strong>VetCare</strong>.</p>
         <div class="no-print">
-            <button onclick="window.print()" class="btn btn-primary">
+            <a href="{% url 'factura_pdf' factura.pk %}" class="btn btn-primary" target="_blank">
+                <i class="fas fa-file-pdf"></i> Descargar PDF
+            </a>
+            <button onclick="window.print()" class="btn btn-secondary">
                 <i class="fas fa-print"></i> Imprimir
             </button>
             <a href="{% url 'listar_facturas' %}" class="btn btn-secondary">

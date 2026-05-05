@@ -8,9 +8,14 @@ class Factura(models.Model):
         ('qr', 'QR / Transferencia'),
         ('tarjeta', 'Tarjeta'),
     )
+    TIPO_FACTURA_CHOICES = (
+        ('venta', 'Venta de Productos'),
+        ('atencion', 'Atención Médica / Servicio'),
+    )
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='facturas')
     fecha = models.DateTimeField(auto_now_add=True)
     metodo_pago = models.CharField(max_length=20, choices=METODO_PAGO_CHOICES)
+    tipo = models.CharField(max_length=20, choices=TIPO_FACTURA_CHOICES, default='venta')
     total = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     pagado = models.BooleanField(default=True)
 

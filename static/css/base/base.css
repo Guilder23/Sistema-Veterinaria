@@ -28,6 +28,79 @@
     --shadow: 0 0.1rem 1rem 0 rgba(0, 0, 0, 0.4);
 }
 
+[data-theme="dark"] .card, 
+[data-theme="dark"] .navbar,
+[data-theme="dark"] .dropdown-menu,
+[data-theme="dark"] .main-content {
+    background-color: #1e293b;
+}
+
+/* FullCalendar Dark Mode */
+[data-theme="dark"] .fc {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .fc-theme-standard td, 
+[data-theme="dark"] .fc-theme-standard th,
+[data-theme="dark"] .fc-theme-standard .fc-scrollgrid {
+    border-color: #334155;
+}
+
+[data-theme="dark"] .fc-day-today {
+    background-color: rgba(78, 115, 223, 0.15) !important;
+}
+
+[data-theme="dark"] .fc-list-day-cushion,
+[data-theme="dark"] .fc-col-header-cell {
+    background-color: #0f172a;
+}
+
+[data-theme="dark"] .fc-button-primary:disabled {
+    background-color: #334155 !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .calendar-container {
+    background-color: #1e293b;
+}
+
+[data-theme="dark"] .calendar-legend {
+    background-color: #0f172a;
+}
+
+/* Chart.js tooltips in dark mode are handled via JS usually, 
+   but we can ensure general text contrast */
+[data-theme="dark"] .chart-container {
+    filter: saturate(1.2);
+}
+
+/* Timeline/Historial Clinical in Dark Mode */
+[data-theme="dark"] .timeline::before {
+    background-color: #334155;
+}
+
+[data-theme="dark"] .timeline-content {
+    background-color: #1e293b;
+}
+
+[data-theme="dark"] .receta-box {
+    background-color: #0f172a;
+}
+
+/* Specific button and link adjustments */
+[data-theme="dark"] .stat-link {
+    color: #a5b4fc;
+}
+
+[data-theme="dark"] .stat-link:hover {
+    color: #fff;
+}
+
+/* Fix for standard link colors in dark cards */
+[data-theme="dark"] .card a:not(.btn) {
+    color: #a5b4fc;
+}
+
 * {
     margin: 0;
     padding: 0;

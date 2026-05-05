@@ -15,6 +15,8 @@ def reportes_general(request):
     # 1. Financial Stats
     facturas_mes = Factura.objects.filter(fecha__gte=start_of_month, pagado=True)
     total_revenue = facturas_mes.aggregate(Sum('total'))['total__sum'] or 0
+    revenue_venta = facturas_mes.filter(tipo='venta').aggregate(Sum('total'))['total__sum'] or 0
+    revenue_atencion = facturas_mes.filter(tipo='atencion').aggregate(Sum('total'))['total__sum'] or 0
     avg_ticket = facturas_mes.aggregate(Avg('total'))['total__avg'] or 0
     
     # 2. Revenue Chart (Last 30 days)
@@ -41,9 +43,16 @@ def reportes_general(request):
     
     prod_labels = [p['producto__nombre'] for p in top_products]
     prod_values = [p['total_qty'] for p in top_products]
+
+    # Theme preference for charts
+    is_dark_mode = request.COOKIES.get('theme') == 'dark'
+    text_color = '#f1f5f9' if is_dark_mode else '#333333'
+    grid_color = '#334155' if is_dark_mode else '#e3e6f0'
     
     context = {
         'total_revenue': total_revenue,
+        'revenue_venta': revenue_venta,
+        'revenue_atencion': revenue_atencion,
         'avg_ticket': round(avg_ticket, 2),
         'total_pets': Mascota.objects.count(),
         'daily_labels': json.dumps(daily_labels),
@@ -52,5 +61,7 @@ def reportes_general(request):
         'especies_values': json.dumps(especies_values),
         'prod_labels': json.dumps(prod_labels),
         'prod_values': json.dumps(prod_values),
+        'text_color': text_color,
+        'grid_color': grid_color,
     }
     return render(request, 'reportes/general.html', context)

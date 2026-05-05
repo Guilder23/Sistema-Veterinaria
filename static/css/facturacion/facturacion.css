@@ -52,10 +52,29 @@
     margin-left: 1rem;
 }
 
-.btn-small {
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
+.badge-type {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
 }
+
+.badge-type.sale {
+    background-color: #eef2ff;
+    color: var(--primary-color);
+}
+
+.badge-type.service {
+    background-color: #f0fdf4;
+    color: #16a34a;
+}
+
+[data-theme="dark"] .badge-type.sale { background-color: rgba(78, 115, 223, 0.2); }
+[data-theme="dark"] .badge-type.service { background-color: rgba(22, 163, 74, 0.2); }
+
 
 /* Invoice Detail View */
 .invoice-container {

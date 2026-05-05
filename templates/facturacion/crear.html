@@ -7,20 +7,62 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/facturacion/facturacion.css' %}">
+<style>
+    .billing-type-selector {
+        margin-bottom: 1.5rem;
+        display: flex;
+        gap: 1rem;
+    }
+    .type-option {
+        flex: 1;
+        padding: 1rem;
+        border: 2px solid #e3e6f0;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    .type-option.active {
+        border-color: var(--primary-color);
+        background-color: rgba(78, 115, 223, 0.05);
+    }
+    .type-option i {
+        font-size: 1.5rem;
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--secondary-color);
+    }
+    .type-option.active i {
+        color: var(--primary-color);
+    }
+    .hidden { display: none; }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="card form-card">
-    <form method="POST">
+    <form method="POST" id="invoice-form">
         {% csrf_token %}
+        <input type="hidden" name="tipo" id="invoice-tipo" value="{{ initial_tipo|default:'venta' }}">
         
+        <div class="billing-type-selector">
+            <div class="type-option {% if initial_tipo != 'atencion' %}active{% endif %}" data-type="venta">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Venta de Productos</span>
+            </div>
+            <div class="type-option {% if initial_tipo == 'atencion' %}active{% endif %}" data-type="atencion">
+                <i class="fas fa-stethoscope"></i>
+                <span>Atención Médica</span>
+            </div>
+        </div>
+
         <div class="grid-2">
             <div class="form-group">
                 <label for="cliente">Cliente</label>
                 <select name="cliente" id="cliente" class="form-control" required>
                     <option value="">Seleccione un cliente</option>
                     {% for cliente in clientes %}
-                    <option value="{{ cliente.id }}">{{ cliente.nombre_completo }}</option>
+                    <option value="{{ cliente.id }}" {% if initial_cliente|add:"0" == cliente.id %}selected{% endif %}>{{ cliente.nombre_completo }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -34,35 +76,60 @@
             </div>
         </div>
 
-        <div class="products-selection">
-            <h5><i class="fas fa-shopping-cart"></i> Selección de Productos</h5>
-            <div id="products-container">
-                <div class="product-row grid-2">
-                    <div class="form-group">
-                        <label>Producto</label>
-                        <select name="productos[]" class="form-control" required>
-                            <option value="">Seleccione producto</option>
-                            {% for prod in productos %}
-                            <option value="{{ prod.id }}" data-price="{{ prod.precio_venta }}">
-                                {{ prod.nombre }} (${{ prod.precio_venta }}) - Stock: {{ prod.stock }}
-                            </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Cantidad</label>
-                        <input type="number" name="cantidades[]" class="form-control" value="1" min="1" required>
+        <!-- Product Section -->
+        <div id="section-venta" class="billing-section {% if initial_tipo == 'atencion' %}hidden{% endif %}">
+            <div class="products-selection">
+                <h5><i class="fas fa-shopping-cart"></i> Selección de Productos</h5>
+                <div id="products-container">
+                    <div class="product-row grid-2">
+                        <div class="form-group">
+                            <label>Producto</label>
+                            <select name="productos[]" class="form-control prod-select">
+                                <option value="">Seleccione producto</option>
+                                {% for prod in productos %}
+                                <option value="{{ prod.id }}" data-price="{{ prod.precio_venta }}">
+                                    {{ prod.nombre }} (${{ prod.precio_venta }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Cantidad</label>
+                            <input type="number" name="cantidades[]" class="form-control prod-qty" value="1" min="1">
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="d-flex justify-between align-center">
                 <button type="button" id="add-product" class="btn btn-secondary btn-small">
                     <i class="fas fa-plus"></i> Agregar otro producto
                 </button>
-                <div class="total-summary">
-                    TOTAL: <span>$ <span id="total-amount">0.00</span></span>
+            </div>
+        </div>
+
+        <!-- Attention Section -->
+        <div id="section-atencion" class="billing-section {% if initial_tipo != 'atencion' %}hidden{% endif %}">
+            <div class="products-selection">
+                <h5><i class="fas fa-hand-holding-heart"></i> Detalles de la Atención</h5>
+                <div id="services-container">
+                    <div class="service-row grid-2">
+                        <div class="form-group">
+                            <label>Servicio / Concepto</label>
+                            <input type="text" name="servicios[]" class="form-control serv-name" placeholder="Ej: Consulta General, Vacunación" value="{{ initial_servicio }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Precio ($)</label>
+                            <input type="number" step="0.01" name="precios_servicios[]" class="form-control serv-price" value="0.00">
+                        </div>
+                    </div>
                 </div>
+                <button type="button" id="add-service" class="btn btn-secondary btn-small">
+                    <i class="fas fa-plus"></i> Agregar otro servicio
+                </button>
+            </div>
+        </div>
+
+        <div class="total-display text-right mt-1">
+            <div class="total-summary">
+                TOTAL A PAGAR: <span style="font-size: 1.5rem; font-weight: 800; color: var(--primary-color);">$ <span id="total-amount">0.00</span></span>
             </div>
         </div>
         
@@ -79,5 +146,90 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/facturacion/facturacion.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const typeOptions = document.querySelectorAll('.type-option');
+        const tipoInput = document.getElementById('invoice-tipo');
+        const sectionVenta = document.getElementById('section-venta');
+        const sectionAtencion = document.getElementById('section-atencion');
+        const totalAmountSpan = document.getElementById('total-amount');
+
+        // Toggle sections
+        typeOptions.forEach(opt => {
+            opt.addEventListener('click', () => {
+                typeOptions.forEach(o => o.classList.remove('active'));
+                opt.classList.add('active');
+                const type = opt.dataset.type;
+                tipoInput.value = type;
+
+                if (type === 'venta') {
+                    sectionVenta.classList.remove('hidden');
+                    sectionAtencion.classList.add('hidden');
+                } else {
+                    sectionVenta.classList.add('hidden');
+                    sectionAtencion.classList.remove('hidden');
+                }
+                calculateTotal();
+            });
+        });
+
+        // Add Product Row
+        document.getElementById('add-product').addEventListener('click', () => {
+            const container = document.getElementById('products-container');
+            const row = container.querySelector('.product-row').cloneNode(true);
+            row.querySelector('select').value = '';
+            row.querySelector('input').value = '1';
+            container.appendChild(row);
+            attachListeners();
+        });
+
+        // Add Service Row
+        document.getElementById('add-service').addEventListener('click', () => {
+            const container = document.getElementById('services-container');
+            const row = container.querySelector('.service-row').cloneNode(true);
+            row.querySelector('.serv-name').value = '';
+            row.querySelector('.serv-price').value = '0.00';
+            container.appendChild(row);
+            attachListeners();
+        });
+
+        function calculateTotal() {
+            let total = 0;
+            const type = tipoInput.value;
+
+            if (type === 'venta') {
+                const rows = document.querySelectorAll('.product-row');
+                rows.forEach(row => {
+                    const select = row.querySelector('select');
+                    const qty = row.querySelector('input').value;
+                    if (select.value) {
+                        const price = select.options[select.selectedIndex].dataset.price;
+                        total += parseFloat(price) * parseInt(qty);
+                    }
+                });
+            } else {
+                const prices = document.querySelectorAll('.serv-price');
+                prices.forEach(input => {
+                    if (input.value) total += parseFloat(input.value);
+                });
+            }
+            totalAmountSpan.textContent = total.toFixed(2);
+        }
+
+        function attachListeners() {
+            document.querySelectorAll('.prod-select, .prod-qty, .serv-price').forEach(el => {
+                el.removeEventListener('change', calculateTotal);
+                el.addEventListener('change', calculateTotal);
+                el.addEventListener('input', calculateTotal);
+            });
+        }
+
+        attachListeners();
+        
+        // Trigger initial calculation if there's pre-filled data
+        if (tipoInput.value === 'atencion') {
+            calculateTotal();
+        }
+    });
+</script>
 {% endblock %}

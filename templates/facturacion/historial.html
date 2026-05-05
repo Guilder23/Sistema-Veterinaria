@@ -1,0 +1,73 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Historial de Pagos - VetCare{% endblock %}
+
+{% block page_title %}Historial de Pagos{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4>Registro Global de Transacciones</h4>
+        <div class="header-actions">
+            <a href="{% url 'listar_facturas' %}" class="btn btn-secondary">
+                <i class="fas fa-file-invoice"></i> Ver Facturas
+            </a>
+            <a href="{% url 'crear_factura' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nueva Factura
+            </a>
+        </div>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Método</th>
+                    <th>Monto</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for factura in facturas %}
+                <tr>
+                    <td><strong>#{{ factura.id }}</strong></td>
+                    <td>{{ factura.fecha|date:"d/m/Y H:i" }}</td>
+                    <td>{{ factura.cliente.nombre_completo }}</td>
+                    <td>{{ factura.get_metodo_pago_display }}</td>
+                    <td><strong>${{ factura.total }}</strong></td>
+                    <td>
+                        {% if factura.pagado %}
+                        <span class="status-badge complete">Pagado</span>
+                        {% else %}
+                        <span class="status-badge low">Pendiente</span>
+                        {% endif %}
+                    </td>
+                    <td class="actions">
+                        <a href="{% url 'ver_factura' factura.pk %}" class="btn-action view" title="Ver Detalle">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{% url 'factura_pdf' factura.pk %}" class="btn-action print" title="Descargar PDF" target="_blank">
+                            <i class="fas fa-file-pdf"></i>
+                        </a>
+                        {% if not factura.pagado %}
+                        <a href="{% url 'pagar_factura' factura.pk %}" class="btn-action confirm" title="Registrar Pago">
+                            <i class="fas fa-check-circle"></i>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="empty-state">No se encontraron transacciones registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
