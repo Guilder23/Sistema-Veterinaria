@@ -11,9 +11,10 @@
     </div>
 
     <div class="navbar-right">
-        <div class="search-bar">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Buscar...">
+        <div class="theme-toggle">
+            <button class="icon-btn" id="theme-toggle-btn" title="Cambiar modo">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
         
         <div class="notifications">
@@ -27,8 +28,17 @@
             <img src="{% if user.foto %}{{ user.foto.url }}{% else %}{% static 'img/default-user.png' %}{% endif %}" alt="Profile">
             <i class="fas fa-chevron-down"></i>
             <div class="dropdown-menu" id="dropdown-menu">
-                <a href="{% url 'perfil' %}"><i class="fas fa-user-cog"></i> Mi Perfil</a>
-                <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+                <a href="{% url 'perfil' %}">
+                    <i class="fas fa-user-cog"></i> 
+                    <span>Mi Perfil</span>
+                </a>
+                <form action="{% url 'logout' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="dropdown-item-btn">
+                        <i class="fas fa-sign-out-alt"></i> 
+                        <span>Cerrar Sesión</span>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
